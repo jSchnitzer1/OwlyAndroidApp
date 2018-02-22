@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_height="60dp"
+        android:weightSum="1">
+
+        <ImageView
+            android:id="@+id/owlyIcon"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:layout_marginLeft="15dp"
+            app:srcCompat="@drawable/login_owly_icon" />
+
+        <ImageView
+            android:id="@+id/owlyTxtImg"
+            android:layout_width="900px"
+            android:layout_height="90px"
+            android:layout_marginTop="12dp"
+            app:srcCompat="@drawable/owly_text_main" />
+    </LinearLayout>
+
+    <TextView
+        android:text="Username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:typeface="normal"
+        android:layout_marginTop="28dp"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/srvIp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="Username or Email"
+        android:inputType="textUri|textPhonetic"
+        android:singleLine="true"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textColorLink="@android:color/holo_orange_dark" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/srvIp"
+        android:layout_marginTop="50dp"
+        android:text="Password"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:typeface="normal" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/port"
+        android:singleLine="true"
+        android:layout_marginTop="11dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textColorLink="@android:color/holo_orange_dark"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/colorAccent"
+        android:inputType="textPassword"
+        />
+
+    <Button
+        android:id="@+id/login"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkBox"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:onClick="login"
+        android:text="Login"
+        android:textColorLink="@android:color/holo_orange_dark" />
+
+
+    <TextView
+        android:text="© 2018 Owly. All Rights Reserved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/infoStatus"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/txtLostpassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/port"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:autoLink="web"
+        android:gravity="center"
+        android:padding="20px"
+        android:text="@string/defaultpassword"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        style="@android:style/Widget.Holo.Light.CompoundButton.CheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/txtLostpassword"
+        android:layout_below="@+id/txtLostpassword"
+        android:text="Use Mobile Bank ID" />
+
+    <ImageView
+        android:id="@+id/bankIdImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtLostpassword"
+        android:layout_toEndOf="@+id/checkBox"
+        app:srcCompat="@drawable/bankid" />
+
+
+</RelativeLayout>

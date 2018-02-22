@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Owly</string>
+    <string name="defaultpassword">Forget password? <a href="http://www.com.owly">Click here</a></string>
+</resources>

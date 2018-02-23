@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Owly</string>
     <string name="defaultpassword">Forget password? <a href="http://www.com.owly">Click here</a></string>
+    <string name="facebook_app_id">2034210473515666</string>
+    <string name="fb_login_protocol_scheme">fb2034210473515666</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_about_us">About us</string>
+    <string name="menu_logout">Logout</string>
 </resources>

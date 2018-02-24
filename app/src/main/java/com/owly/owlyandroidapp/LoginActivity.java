@@ -66,8 +66,6 @@ public class LoginActivity extends Activity {
         if(isLoggedIn())
             goToHomeActivity();
 
-        initializeGoogle();
-
         ImageView owlyIcon = (ImageView) findViewById(R.id.owlyIcon);
         owlyIcon.setBackgroundResource(R.drawable.login_owly_icon);
 

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "863807149053",
+    "firebase_url": "https://owlyandroidapp-cc27b.firebaseio.com",
+    "project_id": "owlyandroidapp-cc27b",
+    "storage_bucket": "owlyandroidapp-cc27b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863807149053:android:052959005b1757dd",
+        "android_client_info": {
+          "package_name": "com.owly.owlyandroidapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863807149053-ikgkfi3i7qkfc3i0i9d4268ls7pnc34h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.owly.owlyandroidapp",
+            "certificate_hash": "f4cd70956b0afd976bbeaff603d1141cf60abc9b"
+          }
+        },
+        {
+          "client_id": "863807149053-v68mu56qalqs6d9fhhrp2ilnj58ooamq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7ghw3npAGpo7hD9Qpb-iBKfsa0LYsDbI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863807149053-v68mu56qalqs6d9fhhrp2ilnj58ooamq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

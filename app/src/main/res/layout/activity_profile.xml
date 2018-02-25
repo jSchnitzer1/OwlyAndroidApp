@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/main_controls"
+        android:layout_width="match_parent"
+        android:layout_height="250dp">
+
+
+
+        <RelativeLayout
+            android:id="@+id/google_map"
+            android:layout_width="match_parent"
+            android:layout_height="125dp">
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/imgUser"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="0"
+            app:srcCompat="@drawable/profile_user" />
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgUser"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="7dp"
+            android:text="Camilla Svensson"
+            android:textStyle='bold' />
+
+        <RelativeLayout
+            android:id="@+id/stars"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/username"
+            android:layout_marginEnd="115dp"
+            android:layout_marginStart="60dp">
+
+            <ImageView
+                android:id="@+id/str1"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/star" />
+
+            <ImageView
+                android:id="@+id/str2"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/str1"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/star" />
+
+            <ImageView
+                android:id="@+id/str3"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/str2"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/star" />
+
+            <ImageView
+                android:id="@+id/str4"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/str3"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/star" />
+
+            <ImageView
+                android:id="@+id/str5"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_alignTop="@+id/str4"
+                android:layout_toEndOf="@+id/str4"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/star" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/info"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/stars"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="19dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/stars"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/sales"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="35dp"
+                    android:text="15" />
+
+                <TextView
+                    android:id="@+id/reviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="145dp"
+                    android:text="51" />
+
+                <TextView
+                    android:id="@+id/buys"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="147dp"
+                    android:text="10" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/stars"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/salesTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="29dp"
+                    android:text="Sales" />
+
+                <TextView
+                    android:id="@+id/reviewsTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="114dp"
+                    android:text="Reviews" />
+
+                <TextView
+                    android:id="@+id/buysTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="124dp"
+                    android:text="Buys" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/main_controls"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="55dp"
+            android:text="Your listing is here somewhere :)" />
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

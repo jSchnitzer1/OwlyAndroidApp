@@ -109,6 +109,8 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.profile_item:
+                Intent i = new Intent(HomeActivity.this, ProfileActivity.class);
+                startActivity(i);
                 break;
             case R.id.about_us_item:
                 Toast.makeText(HomeActivity.this, "About us...", Toast.LENGTH_SHORT).show();

@@ -1,4 +1,4 @@
-package com.owly.owlyandroidapp;
+package com.owly.owlyandroidapp.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,8 @@ import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
+import com.owly.owlyandroidapp.login.LoginActivity;
+import com.owly.owlyandroidapp.R;
 
 public class HomeActivity extends AppCompatActivity {
     AccessToken accessToken;

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="com.owly.owlyandroidapp.home.MainActivity">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:descendantFocusability="blocksDescendants">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="13dp"
+            android:layout_weight="0"
+            app:srcCompat="@drawable/rsz_1azfnsli" />
+
+        <ImageButton
+            android:id="@+id/profile"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/user"
+            android:textColorLink="@android:color/holo_orange_dark" />
+
+        <ImageButton
+            android:id="@+id/products"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/profile"
+            android:src="@drawable/products"
+
+            android:textColorLink="@android:color/holo_orange_dark" />
+
+        <ImageButton
+            android:id="@+id/search"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/editText"
+            android:src="@drawable/search"
+            android:textColorLink="@android:color/holo_orange_dark"
+            android:textColor="#ffffff"/>
+
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/imageView"
+            android:ems="10"
+            android:hint="Search..."
+            android:inputType="none"
+            android:text="Search..." />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/tvLastItem"
+        android:padding="@dimen/five_dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/five_dp"
+        android:background="@drawable/rounde_rect_placeholder"
+        android:text=""
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        />
+
+</android.support.constraint.ConstraintLayout>

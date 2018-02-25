@@ -60,6 +60,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         initializeControls();
         loginFB();
+        initializeGoogle();
 
         if(isLoggedIn())
             goToHomeActivity();

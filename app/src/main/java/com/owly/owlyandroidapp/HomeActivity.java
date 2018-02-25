@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,7 +39,7 @@ public class HomeActivity extends AppCompatActivity {
 
         initializeFacebook();
         initializeGoogle();
-
+        Log.d("Conri","Conri");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -75,9 +76,9 @@ public class HomeActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() == null && !isLoggedInFacebook()) {
-                    goToLoginActivity("You are logged out Google successfully!");
-                }
+               // if (firebaseAuth.getCurrentUser() == null && !isLoggedInFacebook()) {
+                   // goToLoginActivity("You are logged out Google successfully!");
+              //  }
             }
         };
     }

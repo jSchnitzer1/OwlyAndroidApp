@@ -194,7 +194,7 @@ public class LoginActivity extends Activity {
 
     public void login(View v) {
         if (v.getId() == R.id.login) {
-            goToHomeActivity();
+            //goToHomeActivity();
         }
     }
 

@@ -61,8 +61,6 @@ public class LoginActivity extends Activity {
         initializeControls();
         loginFB();
 
-        initializeGoogle();
-
         if(isLoggedIn())
             goToHomeActivity();
 

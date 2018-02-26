@@ -22,8 +22,7 @@
         android:id="@+id/main_controls"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:layout_below="@+id/toolbar"
-        android:descendantFocusability="blocksDescendants">
+        android:layout_below="@+id/toolbar">
 
         <ImageView
             android:id="@+id/imageView"

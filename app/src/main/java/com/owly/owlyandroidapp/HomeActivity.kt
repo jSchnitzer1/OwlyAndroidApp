@@ -15,6 +15,8 @@ import android.view.MenuItem
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 
@@ -73,10 +75,7 @@ class HomeActivity : AppCompatActivity() {
 
     initializeFacebook()
     initializeGoogle()
-    val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-    setSupportActionBar(toolbar)
-
-    Log.d("Conri","")
+    initializeGUI()
 
     showLoginStatus()
     Fresco.initialize(this)
@@ -162,6 +161,15 @@ class HomeActivity : AppCompatActivity() {
 
   }
 
+  private fun initializeGUI() {
+    val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
+    setSupportActionBar(toolbar)
+    val dropdown = findViewById<Spinner>(R.id.category)
+    val items = arrayOf("Electronics", "Vehicles", "Vegetables")
+    val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
+    dropdown.adapter = adapter
+  }
+
   private fun showLoginStatus() {
     if (isLoggedInFacebook) {
       val profile = Profile.getCurrentProfile()
@@ -187,10 +195,10 @@ class HomeActivity : AppCompatActivity() {
 
   private fun initializeGoogle() {
     mAuth = FirebaseAuth.getInstance()
-    mAuthListener = FirebaseAuth.AuthStateListener {
-      // if (firebaseAuth.getCurrentUser() == null && !isLoggedInFacebook()) {
-      // goToLoginActivity("You are logged out Google successfully!");
-      //  }
+    mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+      if (firebaseAuth.currentUser == null && !isLoggedInFacebook) {
+        goToLoginActivity("You are logged out Google successfully!")
+      }
     }
   }
 

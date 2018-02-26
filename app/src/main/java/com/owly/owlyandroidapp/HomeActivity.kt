@@ -159,12 +159,8 @@ class HomeActivity : AppCompatActivity() {
       }
     }
     rvList!!.addOnScrollListener(endlessRecyclerViewScrollListener)
-    rvList!!.setOnClickListener({
-      Log.d("CONRI", it.id.toString())
-    })
 
   }
-
 
   private fun showLoginStatus() {
     if (isLoggedInFacebook) {

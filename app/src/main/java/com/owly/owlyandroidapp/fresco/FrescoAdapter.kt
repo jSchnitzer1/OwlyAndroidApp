@@ -2,12 +2,14 @@ package com.owly.owlyandroidapp.fresco
 
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.owly.owlyandroidapp.R
 import com.owly.owlyandroidapp.bean.Item
+import kotterknife.bindOptionalView
 
 
 class FrescoAdapter(activity: Activity) : RecyclerView.Adapter<FrescoAdapter.ViewHolder>() {
@@ -28,11 +30,15 @@ class FrescoAdapter(activity: Activity) : RecyclerView.Adapter<FrescoAdapter.Vie
     viewHolder.ivImageView?.setImageURI(listItem2!![i].thumbnailImage)
     viewHolder.txtViewName.text = listItem2!![i].name
     viewHolder.txtViewPrice.text = listItem2!![i].salePrice.toString() + " €"
+    val name = listItem2!![i].name
+    viewHolder.itemView?.setOnClickListener{Log.d("Touched",name)}
   }
+
 
   override fun getItemCount(): Int {
     return listItem2!!.size
   }
+
 
   inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -42,3 +48,5 @@ class FrescoAdapter(activity: Activity) : RecyclerView.Adapter<FrescoAdapter.Vie
 
   }
 }
+
+

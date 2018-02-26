@@ -12,10 +12,10 @@ import com.owly.owlyandroidapp.bean.Item
 
 class FrescoAdapter(activity: Activity) : RecyclerView.Adapter<FrescoAdapter.ViewHolder>() {
   private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
-  private var listItem: List<Item>? = null
+  private var listItem2: List<Item>? = null
 
-  fun setListItem(listItem: List<Item>) {
-    this.listItem = listItem
+  fun setListItem(listItem2: List<Item>) {
+    this.listItem2 = listItem2
     notifyDataSetChanged()
   }
 
@@ -25,13 +25,13 @@ class FrescoAdapter(activity: Activity) : RecyclerView.Adapter<FrescoAdapter.Vie
   }
 
   override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-    viewHolder.ivImageView?.setImageURI(listItem!![i].URL)
-    viewHolder.txtViewName.text = listItem!![i].Name
-    viewHolder.txtViewPrice.text = listItem!![i].Price.toString() + " €"
+    viewHolder.ivImageView?.setImageURI(listItem2!![i].thumbnailImage)
+    viewHolder.txtViewName.text = listItem2!![i].name
+    viewHolder.txtViewPrice.text = listItem2!![i].salePrice.toString() + " €"
   }
 
   override fun getItemCount(): Int {
-    return listItem!!.size
+    return listItem2!!.size
   }
 
   inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -1,3 +1,10 @@
 package com.owly.owlyandroidapp.bean
-
-data class Item(val Name: String, val Description: String, val URL: String,val Price: Double)
+data class Item(
+        val itemId: Int,
+        val parentItemId: Int,
+        val name: String,
+        val salePrice: Double,
+        val shortDescription: String,
+        val thumbnailImage: String,
+        val mediumImage: String,
+        val largeImage: String)

@@ -1,0 +1,229 @@
+package com.owly.owlyandroidapp
+
+import android.content.ClipData
+import android.content.Intent
+import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.StaggeredGridLayoutManager
+import android.view.Menu
+import android.view.MenuInflater
+import com.owly.owlyandroidapp.bean.Item
+import android.view.MenuItem
+import android.support.v7.widget.Toolbar
+import android.util.Log
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+
+import com.facebook.AccessToken
+import com.facebook.Profile
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.login.LoginManager
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.firebase.auth.FirebaseAuth
+import com.owly.owlyandroidapp.fresco.FrescoAdapter
+import com.owly.owlyandroidapp.view.EndlessRecyclerViewScrollListener
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import kotterknife.bindOptionalView
+import kotterknife.bindView
+
+import java.util.ArrayList
+
+class HomeActivity : AppCompatActivity() {
+  internal var accessToken: AccessToken? = null
+
+  internal var mAuth: FirebaseAuth? = null
+  internal lateinit var mAuthListener: FirebaseAuth.AuthStateListener
+  internal val rvList: RecyclerView? by bindOptionalView(R.id.rvList)
+  internal var tvLastItem: TextView? = null
+  private var itemAdapter: FrescoAdapter? = null
+  private val listItem2 = ArrayList<Item>()
+
+  private var disposable: Disposable? = null
+
+  private val walmartAPIService by lazy {
+    WalmartApiService.create()
+  }
+
+
+
+  private var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener? = null
+
+  private val isLoggedInFacebook: Boolean
+    get() = accessToken != null
+
+  private val isLoggedInGoogle: Boolean
+    get() = mAuth != null
+
+  override fun onStart() {
+    super.onStart()
+    if (mAuth != null)
+      mAuth!!.addAuthStateListener(mAuthListener)
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_home)
+
+    initializeFacebook()
+    initializeGoogle()
+    val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
+    setSupportActionBar(toolbar)
+
+    Log.d("Conri","")
+
+    showLoginStatus()
+    Fresco.initialize(this)
+
+
+    val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+    staggeredGridLayoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
+
+    val manager = GridLayoutManager(this, 6)
+    manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+      override fun getSpanSize(position: Int): Int {
+        val index = position % 5
+        when (index) {
+          0 -> return 2
+          1 -> return 2
+          2 -> return 2
+          3 -> return 3
+          4 -> return 3
+        }
+        return -1
+      }
+    }
+
+    rvList!!.layoutManager = staggeredGridLayoutManager
+    itemAdapter = FrescoAdapter(this)
+    WalmartApiService.create().trends()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .subscribe ({
+          result ->
+          //Log.d("Result", "There are ${result.items.size} Java developers in Lagos")
+          listItem2.addAll(result.items.subList(0,9))
+          itemAdapter!!.setListItem(listItem2)
+          rvList!!.adapter = itemAdapter
+          rvList!!.itemAnimator = null
+
+        }, { error ->
+          error.printStackTrace()
+        })
+
+
+
+    endlessRecyclerViewScrollListener = object : EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
+
+      override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+        /* Log.e("", "onLoadMore: ---------------------------------------->" + page);*/
+        val localList = ArrayList<Item>()
+        if (page == 1) {
+          WalmartApiService.create().trends()
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribeOn(Schedulers.io())
+              .subscribe ({
+                result ->
+                localList.addAll(result.items.subList(10,19))
+                listItem2.addAll(localList)
+                itemAdapter!!.setListItem(listItem2)
+              }, { error ->
+                error.printStackTrace()
+              })
+        }else if (page == 2) {
+          WalmartApiService.create().search("SmartPhone")
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribeOn(Schedulers.io())
+              .subscribe ({
+                result ->
+                localList.addAll(result.items)
+                listItem2.addAll(localList)
+                itemAdapter!!.setListItem(listItem2)
+              }, { error ->
+                error.printStackTrace()
+              })
+        }
+
+
+      }
+
+      override fun lastVisibleItem(lastVisibleItem: Int) {
+        //            Log.e("", "lastVisibleItem: -------------------------------------->" + lastVisibleItem);
+        //            tvLastItem.setText("With in " + lastVisibleItem);
+      }
+    }
+    rvList!!.addOnScrollListener(endlessRecyclerViewScrollListener)
+    rvList!!.setOnClickListener({
+      Log.d("CONRI", it.id.toString())
+    })
+
+  }
+
+
+  private fun showLoginStatus() {
+    if (isLoggedInFacebook) {
+      val profile = Profile.getCurrentProfile()
+      if (profile != null) {
+        val firstName = profile.firstName
+        Snackbar.make(findViewById<View>(R.id.search), "Hi $firstName\nYou are logged in using Facebook account", Snackbar.LENGTH_SHORT).show()
+      } else {
+        Snackbar.make(findViewById<View>(R.id.search), "Hi\nYou are logged in using Facebook account", Snackbar.LENGTH_SHORT).show()
+      }
+    } else if (isLoggedInGoogle) {
+      val acct = GoogleSignIn.getLastSignedInAccount(this)
+      if (acct != null) {
+        val personGivenName = acct.givenName
+        Snackbar.make(findViewById<View>(R.id.search), "Hi $personGivenName\nYou are logged in using Google account", Snackbar.LENGTH_SHORT).show()
+      }
+    }
+
+  }
+
+  private fun initializeFacebook() {
+    accessToken = AccessToken.getCurrentAccessToken()
+  }
+
+  private fun initializeGoogle() {
+    mAuth = FirebaseAuth.getInstance()
+    mAuthListener = FirebaseAuth.AuthStateListener {
+      // if (firebaseAuth.getCurrentUser() == null && !isLoggedInFacebook()) {
+      // goToLoginActivity("You are logged out Google successfully!");
+      //  }
+    }
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    val menuInflater = menuInflater
+    menuInflater.inflate(R.menu.home_menu, menu)
+    return true
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    when (item.itemId) {
+      R.id.logout_item -> if (isLoggedInFacebook) {
+        LoginManager.getInstance().logOut()
+        goToLoginActivity("You are logged out Facebook successfully!")
+      } else if (isLoggedInGoogle) {
+        mAuth!!.signOut()
+      }
+      R.id.profile_item -> {
+        val i = Intent(this@HomeActivity, ProfileActivity::class.java)
+        startActivity(i)
+      }
+      R.id.about_us_item -> Toast.makeText(this@HomeActivity, "About us...", Toast.LENGTH_SHORT).show()
+    }
+    return super.onOptionsItemSelected(item)
+  }
+
+  private fun goToLoginActivity(msg: String) {
+    val i = Intent(this@HomeActivity, LoginActivity::class.java)
+    i.putExtra("txtStatusMsg", msg)
+    startActivity(i)
+  }
+}

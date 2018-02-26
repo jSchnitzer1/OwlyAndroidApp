@@ -38,12 +38,6 @@ ext {
 
 
 
-    retrofit = '2.3.0'
-    okHttp3 = '3.8.0'
-    retrofitLib = "com.squareup.retrofit2:retrofit:$retrofit"
-    okHttp3Lib = "com.squareup.okhttp3:logging-interceptor:$okHttp3"
-    retrofitLog = "com.squareup.okhttp3:logging-interceptor:$okHttp3"
-
     icePick = '3.2.0'
     icepickLib = "frankiesardo:icepick:$icePick"
     icepickProcessor = "frankiesardo:icepick-processor:$icePick"

@@ -82,7 +82,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     setContentView(R.layout.activity_home)
 
     initializeFacebook()
-    //initializeGoogle()
+    initializeGoogle()
     initializeGUI()
 
     showLoginStatus()

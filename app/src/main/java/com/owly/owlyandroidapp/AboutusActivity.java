@@ -3,6 +3,7 @@ package com.owly.owlyandroidapp;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,8 +15,8 @@ public class AboutusActivity extends AppCompatActivity {
     private Animation animation;
     private Typeface century_gothic;
 
-    protected AlphaAnimation fadeIn = new AlphaAnimation(0.0f , 1.0f ) ;
-    protected AlphaAnimation fadeOut = new AlphaAnimation( 1.0f , 0.0f ) ;
+    private AlphaAnimation fadeIn = new AlphaAnimation(0.0f , 1.0f ) ;
+    private AlphaAnimation fadeOut = new AlphaAnimation( 1.0f , 0.0f ) ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawerLayout"
-    >
+    android:id="@+id/drawerLayout">
 
     <RelativeLayout
         android:id="@+id/activity_home"
@@ -16,7 +15,7 @@
 
 
         <com.mancj.materialsearchbar.MaterialSearchBar
-            style="@style/MaterialSearchBarLight"
+            style="@style/MaterialSearchBarDark"
             app:mt_speechMode="true"
             app:mt_hint="Search..."
             app:mt_placeholder="Search"
@@ -24,19 +23,25 @@
             app:mt_navIconEnabled="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/searchBar" />
+            android:layout_alignParentStart="true"
+            android:id="@+id/searchBar"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+/>
+
 
 
 
 
 
         <RelativeLayout
-            android:layout_below="@+id/searchBar"
-
             android:id="@+id/main_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
+            android:layout_below="@+id/searchBar"
             android:layout_centerHorizontal="true">
 
 

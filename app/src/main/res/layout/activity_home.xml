@@ -18,11 +18,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+            android:hint=" Search..."
+            android:inputType="text"
+            android:text=""
+            android:imeActionLabel="actionSend"
+            android:singleLine="true"/>
+
+
 
         <RelativeLayout
             android:id="@+id/main_controls"

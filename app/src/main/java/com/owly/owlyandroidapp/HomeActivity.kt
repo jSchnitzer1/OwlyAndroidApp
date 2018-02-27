@@ -19,6 +19,7 @@ import android.view.MenuItem
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 
 import com.facebook.AccessToken
@@ -33,6 +34,7 @@ import com.owly.owlyandroidapp.view.EndlessRecyclerViewScrollListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_home.*
 import kotterknife.bindOptionalView
 import kotterknife.bindView
 
@@ -42,7 +44,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   private var mDrawerLayout: DrawerLayout? = null
   private var mToggle: ActionBarDrawerToggle? = null
-  private var home_nav_view:NavigationView? = null
+  private val home_nav_view:NavigationView? by bindOptionalView(R.id.home_nav_view)
 
   internal var accessToken: AccessToken? = null
 
@@ -51,6 +53,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
   internal val rvList: RecyclerView? by bindOptionalView(R.id.rvList)
   val dropdown: Spinner? by bindOptionalView(R.id.category)
   val search: EditText? by bindOptionalView(R.id.editText)
+  val searchButton: ImageButton? by bindOptionalView(R.id.search)
   internal var tvLastItem: TextView? = null
   private var itemAdapter: FrescoAdapter? = null
   private val listItem2 = ArrayList<Item>()
@@ -104,6 +107,17 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
           4 -> return 3
         }
         return -1
+      }
+    }
+
+
+
+    search!!.setOnEditorActionListener() { v, actionId, event ->
+      if(actionId == EditorInfo.IME_ACTION_DONE){
+        searchButton!!.performClick()
+        true
+      } else {
+        false
       }
     }
 
@@ -220,8 +234,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     mDrawerLayout!!.addDrawerListener(mToggle!!)
     mToggle!!.syncState()
     this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-    home_nav_view = findViewById(R.id.home_nav_view) as NavigationView
+    home_nav_view
     home_nav_view!!.setNavigationItemSelectedListener(this)
   }
 

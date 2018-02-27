@@ -11,7 +11,11 @@ interface WalmartApiService {
         @GET("search?format=json&sort=price&order=desc")
         fun search(@Query("query") query: String, @Query("apiKey") apiKey: String = "5ky6bnsja5usjshxjazenpdx"): Observable<Search>
 
-        @GET("trends?format=json&sort=price&order=asc")
+        @GET("search?format=json&sort=price&order=desc&apiKey=5ky6bnsja5usjshxjazenpdx")
+        fun searchWith(@Query("query") query: String, @Query("cat_id") category: Int): Observable<Search>
+
+
+  @GET("trends?format=json&sort=price&order=asc")
         fun trends(@Query("apiKey") apiKey: String = "5ky6bnsja5usjshxjazenpdx"): Observable<Search>
 
         /**

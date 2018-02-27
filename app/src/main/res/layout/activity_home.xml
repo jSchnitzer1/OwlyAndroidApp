@@ -22,7 +22,8 @@
         android:id="@+id/main_controls"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/toolbar"
+        >
 
         <ImageButton
             android:id="@+id/search"

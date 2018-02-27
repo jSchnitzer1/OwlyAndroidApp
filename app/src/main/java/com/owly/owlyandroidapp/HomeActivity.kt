@@ -220,7 +220,10 @@ class HomeActivity : AppCompatActivity() {
         val i = Intent(this@HomeActivity, ProfileActivity::class.java)
         startActivity(i)
       }
-      R.id.about_us_item -> Toast.makeText(this@HomeActivity, "About us...", Toast.LENGTH_SHORT).show()
+      R.id.about_us_item -> {
+        val i = Intent(this@HomeActivity, AboutusActivity::class.java)
+        startActivity(i)
+      }
     }
     return super.onOptionsItemSelected(item)
   }

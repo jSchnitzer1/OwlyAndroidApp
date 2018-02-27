@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_below="@+id/toolbar"
-        android:descendantFocusability="blocksDescendants">
+        >
 
         <ImageButton
             android:id="@+id/search"

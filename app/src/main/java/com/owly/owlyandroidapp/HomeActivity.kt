@@ -15,10 +15,7 @@ import android.view.MenuItem
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 
 import com.facebook.AccessToken
 import com.facebook.Profile
@@ -43,10 +40,12 @@ class HomeActivity : AppCompatActivity() {
   internal var mAuth: FirebaseAuth? = null
   internal lateinit var mAuthListener: FirebaseAuth.AuthStateListener
   internal val rvList: RecyclerView? by bindOptionalView(R.id.rvList)
+  val dropdown: Spinner? by bindOptionalView(R.id.category)
+  val search: EditText? by bindOptionalView(R.id.editText)
   internal var tvLastItem: TextView? = null
   private var itemAdapter: FrescoAdapter? = null
   private val listItem2 = ArrayList<Item>()
-
+  var notInSearch = true
   private var disposable: Disposable? = null
 
   private val walmartAPIService by lazy {
@@ -123,7 +122,7 @@ class HomeActivity : AppCompatActivity() {
       override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
         /* Log.e("", "onLoadMore: ---------------------------------------->" + page);*/
         val localList = ArrayList<Item>()
-        if (page == 1) {
+        if (page == 1 && notInSearch) {
           WalmartApiService.create().trends()
               .observeOn(AndroidSchedulers.mainThread())
               .subscribeOn(Schedulers.io())
@@ -135,7 +134,7 @@ class HomeActivity : AppCompatActivity() {
               }, { error ->
                 error.printStackTrace()
               })
-        }else if (page == 2) {
+        }else if (page == 2 && notInSearch) {
           WalmartApiService.create().search("SmartPhone")
               .observeOn(AndroidSchedulers.mainThread())
               .subscribeOn(Schedulers.io())
@@ -161,11 +160,48 @@ class HomeActivity : AppCompatActivity() {
 
   }
 
+  fun beginSearch(v: View) {
+
+    if (v.id == R.id.search) {
+      Log.d("Info",dropdown!!.selectedItem.toString())
+      Log.d("Info2",search!!.text.toString())
+
+      notInSearch = false
+      WalmartApiService.create().searchWith(getText(),getCategoryId())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribeOn(Schedulers.io())
+          .subscribe ({
+            result ->
+            //Log.d("Result", "There are ${result.items.size} Java developers in Lagos")
+            listItem2.clear()
+            listItem2.addAll(result.items)
+            itemAdapter!!.setListItem(listItem2)
+
+          }, { error ->
+            error.printStackTrace()
+          })
+    }
+  }
+
+  fun getCategoryId() : Int{
+    val item = dropdown!!.selectedItem.toString()
+    return when (item){
+      "Electronics" -> 3944
+      "Home" -> 4044
+      "Video Games" -> 2636
+      "Health" -> 976760
+      "Books" -> 3920
+      else -> 0
+    }
+  }
+
+  fun getText():String = search!!.text.toString()
+
   private fun initializeGUI() {
     val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
     setSupportActionBar(toolbar)
     val dropdown = findViewById<Spinner>(R.id.category)
-    val items = arrayOf("Electronics", "Vehicles", "Vegetables")
+    val items = arrayOf("Electronics", "Home", "Video Games","Books")
     val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
     dropdown.adapter = adapter
   }

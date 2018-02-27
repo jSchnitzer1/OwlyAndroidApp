@@ -3,22 +3,22 @@ package com.owly.owlyandroidapp
 import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.design.widget.NavigationView
+import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener
 import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
-import android.view.Menu
-import android.view.MenuInflater
 import com.owly.owlyandroidapp.bean.Item
-import android.view.MenuItem
-import android.support.v7.widget.Toolbar
 import android.util.Log
-import android.view.View
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 
@@ -29,6 +29,7 @@ import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
+import com.mancj.materialsearchbar.MaterialSearchBar
 import com.owly.owlyandroidapp.fresco.FrescoAdapter
 import com.owly.owlyandroidapp.view.EndlessRecyclerViewScrollListener
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -40,7 +41,30 @@ import kotterknife.bindView
 
 import java.util.ArrayList
 
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, MaterialSearchBar.OnSearchActionListener  {
+  override fun onSearchStateChanged(enabled: Boolean) {
+    val s = if(enabled) "enabled" else "disabled";
+    Toast.makeText(this, "Search " + s, Toast.LENGTH_SHORT).show();
+  }
+
+  override fun onSearchConfirmed(text: CharSequence?) {
+    WalmartApiService.create().search(text.toString())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .subscribe ({
+          result ->
+          //Log.d("Result", "There are ${result.items.size} Java developers in Lagos")
+          listItem2.clear()
+          listItem2.addAll(result.items.subList(0,9))
+          itemAdapter!!.setListItem(listItem2)
+          searchBar!!.disableSearch()
+
+        }, { error ->
+          error.printStackTrace()
+        })
+
+  }
+
 
   private var mDrawerLayout: DrawerLayout? = null
   private var mToggle: ActionBarDrawerToggle? = null
@@ -51,19 +75,15 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
   internal var mAuth: FirebaseAuth? = null
   internal lateinit var mAuthListener: FirebaseAuth.AuthStateListener
   internal val rvList: RecyclerView? by bindOptionalView(R.id.rvList)
-  val dropdown: Spinner? by bindOptionalView(R.id.category)
-  val search: EditText? by bindOptionalView(R.id.editText)
-  val searchButton: ImageButton? by bindOptionalView(R.id.search)
+
   internal var tvLastItem: TextView? = null
   private var itemAdapter: FrescoAdapter? = null
   private val listItem2 = ArrayList<Item>()
   var notInSearch = true
-  private var disposable: Disposable? = null
 
-  private val walmartAPIService by lazy {
-    WalmartApiService.create()
-  }
+  var lastSearches: List<String>? = null
 
+  val searchBar: MaterialSearchBar? by bindOptionalView(R.id.searchBar)
 
 
   private var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener? = null
@@ -73,6 +93,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   private val isLoggedInGoogle: Boolean
     get() = mAuth != null
+
+  constructor(parcel: Parcel) : this() {
+    accessToken = parcel.readParcelable(AccessToken::class.java.classLoader)
+    notInSearch = parcel.readByte() != 0.toByte()
+    lastSearches = parcel.createStringArrayList()
+  }
 
   override fun onStart() {
     super.onStart()
@@ -90,6 +116,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     showLoginStatus()
     Fresco.initialize(this)
+
+    //enable searchbar callbacks
+    searchBar!!.setOnSearchActionListener(this)
+    //restore last queries from disk
+    //Inflate menu and setup OnMenuItemClickListener
+    searchBar!!.inflateMenu(R.menu.home_menu);
+    //searchBar!!.getMenu().setOnMenuItemClickListener(this);
+
 
 
     val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -112,14 +146,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
-    search!!.setOnEditorActionListener() { v, actionId, event ->
-      if(actionId == EditorInfo.IME_ACTION_DONE){
-        searchButton!!.performClick()
-        true
-      } else {
-        false
-      }
-    }
+
 
     rvList!!.layoutManager = staggeredGridLayoutManager
     itemAdapter = FrescoAdapter(this)
@@ -183,60 +210,28 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   }
 
-  fun beginSearch(v: View) {
 
-    if (v.id == R.id.search) {
-      Log.d("Info",dropdown!!.selectedItem.toString())
-      Log.d("Info2",search!!.text.toString())
-
-      notInSearch = false
-      WalmartApiService.create().searchWith(getText(),getCategoryId())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribeOn(Schedulers.io())
-          .subscribe ({
-            result ->
-            //Log.d("Result", "There are ${result.items.size} Java developers in Lagos")
-            listItem2.clear()
-            listItem2.addAll(result.items)
-            itemAdapter!!.setListItem(listItem2)
-
-          }, { error ->
-            error.printStackTrace()
-          })
-    }
-  }
-
-  fun getCategoryId() : Int{
-    val item = dropdown!!.selectedItem.toString()
-    return when (item){
-      "Electronics" -> 3944
-      "Home" -> 4044
-      "Video Games" -> 2636
-      "Health" -> 976760
-      "Books" -> 3920
-      else -> 0
-    }
-  }
-
-  fun getText():String = search!!.text.toString()
 
   private fun initializeGUI() {
-    val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-    setSupportActionBar(toolbar)
 
-    val dropdown = findViewById<Spinner>(R.id.category)
-    val items = arrayOf("Electronics", "Home", "Video Games","Books")
-    val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
-    dropdown.adapter = adapter
+
+
 
     mDrawerLayout = findViewById<View>(R.id.drawerLayout) as DrawerLayout
-    mToggle = ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close)
-    mDrawerLayout!!.addDrawerListener(mToggle!!)
-    mToggle!!.syncState()
-    this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-    home_nav_view
+
     home_nav_view!!.setNavigationItemSelectedListener(this)
   }
+
+  override fun onButtonClicked(buttonCode: Int) {
+    when (buttonCode) {
+      MaterialSearchBar.BUTTON_NAVIGATION -> mDrawerLayout!!.openDrawer(Gravity.LEFT)
+      MaterialSearchBar.BUTTON_SPEECH -> {
+      }
+      MaterialSearchBar.BUTTON_BACK -> searchBar!!.disableSearch()
+    }
+  }
+
+
 
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
@@ -264,15 +259,15 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       val profile = Profile.getCurrentProfile()
       if (profile != null) {
         val firstName = profile.firstName
-        Snackbar.make(findViewById<View>(R.id.search), "Hi $firstName\nYou are logged in using Facebook account", Snackbar.LENGTH_SHORT).show()
+        //Snackbar.make(findViewById<View>(R.id.search), "Hi $firstName\nYou are logged in using Facebook account", Snackbar.LENGTH_SHORT).show()
       } else {
-        Snackbar.make(findViewById<View>(R.id.search), "Hi\nYou are logged in using Facebook account", Snackbar.LENGTH_SHORT).show()
+        //Snackbar.make(findViewById<View>(R.id.search), "Hi\nYou are logged in using Facebook account", Snackbar.LENGTH_SHORT).show()
       }
     } else if (isLoggedInGoogle) {
       val acct = GoogleSignIn.getLastSignedInAccount(this)
       if (acct != null) {
         val personGivenName = acct.givenName
-        Snackbar.make(findViewById<View>(R.id.search), "Hi $personGivenName\nYou are logged in using Google account", Snackbar.LENGTH_SHORT).show()
+        //Snackbar.make(findViewById<View>(R.id.search), "Hi $personGivenName\nYou are logged in using Google account", Snackbar.LENGTH_SHORT).show()
       }
     }
 
@@ -321,5 +316,17 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val i = Intent(this@HomeActivity, LoginActivity::class.java)
     i.putExtra("txtStatusMsg", msg)
     startActivity(i)
+  }
+
+
+
+  companion object CREATOR : Parcelable.Creator<HomeActivity> {
+    override fun createFromParcel(parcel: Parcel): HomeActivity {
+      return HomeActivity(parcel)
+    }
+
+    override fun newArray(size: Int): Array<HomeActivity?> {
+      return arrayOfNulls(size)
+    }
   }
 }

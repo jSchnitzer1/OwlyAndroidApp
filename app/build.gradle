@@ -8,7 +8,9 @@ repositories {
     mavenCentral()
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
+
     }
+    maven { url "https://jitpack.io" }
 }
 
 android {
@@ -68,6 +70,12 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
 
     compile "io.reactivex.rxjava2:rxandroid:2.0.1"
+
+    implementation 'com.github.mancj:MaterialSearchBar:0.7.6'
+
+    compile "com.chibatching.kotpref:kotpref:2.4.0"
+    compile "com.chibatching.kotpref:initializer:2.4.0"
+
 }
 
 

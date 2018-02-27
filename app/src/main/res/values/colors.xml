@@ -17,4 +17,5 @@
     <color name="black">#000000</color>
     <color name="place_search_border">#D6D6D6</color>
     <color name="place_search_vertical_divider">#E5E5E5</color>
+    <color name="navBackground">#80a6a6a6</color>
 </resources>

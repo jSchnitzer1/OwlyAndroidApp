@@ -3,7 +3,11 @@ package com.owly.owlyandroidapp
 import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -34,7 +38,12 @@ import kotterknife.bindView
 
 import java.util.ArrayList
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+  private var mDrawerLayout: DrawerLayout? = null
+  private var mToggle: ActionBarDrawerToggle? = null
+  private var home_nav_view:NavigationView? = null
+
   internal var accessToken: AccessToken? = null
 
   internal var mAuth: FirebaseAuth? = null
@@ -200,10 +209,41 @@ class HomeActivity : AppCompatActivity() {
   private fun initializeGUI() {
     val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
     setSupportActionBar(toolbar)
+
     val dropdown = findViewById<Spinner>(R.id.category)
     val items = arrayOf("Electronics", "Home", "Video Games","Books")
     val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
     dropdown.adapter = adapter
+
+    mDrawerLayout = findViewById<View>(R.id.drawerLayout) as DrawerLayout
+    mToggle = ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close)
+    mDrawerLayout!!.addDrawerListener(mToggle!!)
+    mToggle!!.syncState()
+    this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+    home_nav_view = findViewById(R.id.home_nav_view) as NavigationView
+    home_nav_view!!.setNavigationItemSelectedListener(this)
+  }
+
+  override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    when (item.itemId) {
+      R.id.profile_item -> {
+        val i = Intent(this@HomeActivity, ProfileActivity::class.java)
+        startActivity(i)
+      }
+      R.id.logout_item -> {
+        logout()
+      }
+      R.id.settings_item -> {
+      }
+      R.id.about_us_item -> {
+        val i = Intent(this@HomeActivity, AboutusActivity::class.java)
+        startActivity(i)
+      }
+    }
+
+    mDrawerLayout!!.closeDrawer(GravityCompat.START)
+    return true
   }
 
   private fun showLoginStatus() {
@@ -240,29 +280,29 @@ class HomeActivity : AppCompatActivity() {
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
     val menuInflater = menuInflater
-    menuInflater.inflate(R.menu.home_menu, menu)
+    menuInflater.inflate(R.menu.bar_menu, menu)
     return true
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    if(mToggle!!.onOptionsItemSelected(item)) {
+      return true
+    }
     when (item.itemId) {
-      R.id.logout_item -> if (isLoggedInFacebook) {
-        LoginManager.getInstance().logOut()
-        goToLoginActivity("You are logged out Facebook successfully!")
-      } else if (isLoggedInGoogle) {
-        mAuth!!.signOut()
-      }
-      R.id.profile_item -> {
-        val i = Intent(this@HomeActivity, ProfileActivity::class.java)
-        startActivity(i)
-      }
-      R.id.about_us_item -> {
-        val i = Intent(this@HomeActivity, AboutusActivity::class.java)
-        startActivity(i)
-      }
+      R.id.logout_item -> logout()
     }
     return super.onOptionsItemSelected(item)
   }
+
+  private fun logout() {
+    if (isLoggedInFacebook) {
+      LoginManager.getInstance().logOut()
+      goToLoginActivity("You are logged out Facebook successfully!")
+    } else if (isLoggedInGoogle) {
+      mAuth!!.signOut()
+    }
+  }
+
 
   private fun goToLoginActivity(msg: String) {
     val i = Intent(this@HomeActivity, LoginActivity::class.java)

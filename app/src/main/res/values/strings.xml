@@ -6,4 +6,7 @@
     <string name="menu_profile">Profile</string>
     <string name="menu_about_us">About us</string>
     <string name="menu_logout">Logout</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="menu_settings">Settings</string>
 </resources>

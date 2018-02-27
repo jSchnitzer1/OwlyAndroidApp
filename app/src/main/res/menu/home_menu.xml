@@ -2,18 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/logout_item"
-        android:title="@string/menu_logout"
-        android:icon="@drawable/ic_exit_to_app_white_24dp"
-        app:showAsAction="always" />
-
     <item android:id="@+id/profile_item"
         android:title="@string/menu_profile"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_person_black_24dp" />
+
+    <item android:id="@+id/settings_item"
+        android:title="@string/menu_settings"
+        android:icon="@drawable/ic_settings_black_24dp"/>
 
     <item android:id="@+id/about_us_item"
         android:title="@string/menu_about_us"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_class_black_24dp"/>
 
+    <item android:id="@+id/logout_item"
+        android:title="@string/menu_logout"
+        android:icon="@drawable/ic_exit_to_app_white_24dp" />
 
 </menu>

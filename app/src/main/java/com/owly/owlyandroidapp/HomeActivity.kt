@@ -15,6 +15,7 @@ import android.view.MenuItem
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 
 import com.facebook.AccessToken
@@ -29,6 +30,7 @@ import com.owly.owlyandroidapp.view.EndlessRecyclerViewScrollListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_home.*
 import kotterknife.bindOptionalView
 import kotterknife.bindView
 
@@ -42,6 +44,7 @@ class HomeActivity : AppCompatActivity() {
   internal val rvList: RecyclerView? by bindOptionalView(R.id.rvList)
   val dropdown: Spinner? by bindOptionalView(R.id.category)
   val search: EditText? by bindOptionalView(R.id.editText)
+  val searchButton: ImageButton? by bindOptionalView(R.id.search)
   internal var tvLastItem: TextView? = null
   private var itemAdapter: FrescoAdapter? = null
   private val listItem2 = ArrayList<Item>()
@@ -95,6 +98,17 @@ class HomeActivity : AppCompatActivity() {
           4 -> return 3
         }
         return -1
+      }
+    }
+
+
+
+    search!!.setOnEditorActionListener() { v, actionId, event ->
+      if(actionId == EditorInfo.IME_ACTION_DONE){
+        searchButton!!.performClick()
+        true
+      } else {
+        false
       }
     }
 

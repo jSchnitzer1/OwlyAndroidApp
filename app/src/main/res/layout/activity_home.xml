@@ -50,8 +50,8 @@
             android:hint=" Search..."
             android:inputType="text"
             android:text=""
-            android:focusable="true"
-            android:focusableInTouchMode="true"/>
+            android:imeActionLabel="actionSend"
+            android:singleLine="true"/>
 
         <Spinner
             android:id="@+id/category"

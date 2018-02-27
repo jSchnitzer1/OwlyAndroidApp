@@ -34,7 +34,6 @@ public class AboutusActivity extends AppCompatActivity {
 
         credits.setTypeface(century_gothic);
         credits.setText(creditsText);
-        credits.setVisibility(View.GONE);
 
         credits.startAnimation(animation);
 

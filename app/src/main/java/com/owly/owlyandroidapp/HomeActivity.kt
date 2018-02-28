@@ -1,6 +1,7 @@
 package com.owly.owlyandroidapp
 
 import android.content.ClipData
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcel
@@ -11,6 +12,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.PopupMenu
@@ -27,8 +29,12 @@ import com.facebook.Profile
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.login.LoginManager
 import com.github.ybq.android.spinkit.style.DoubleBounce
+import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.mancj.materialsearchbar.MaterialSearchBar
 import com.owly.owlyandroidapp.fresco.FrescoAdapter
@@ -42,8 +48,7 @@ import kotterknife.bindView
 
 import java.util.ArrayList
 
-class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, MaterialSearchBar.OnSearchActionListener, PopupMenu.OnMenuItemClickListener {
-
+class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, MaterialSearchBar.OnSearchActionListener, PopupMenu.OnMenuItemClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
   private var mDrawerLayout: DrawerLayout? = null
   private var mToggle: ActionBarDrawerToggle? = null
@@ -53,8 +58,9 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
 
   internal var mAuth: FirebaseAuth? = null
   internal lateinit var mAuthListener: FirebaseAuth.AuthStateListener
-  internal val rvList: RecyclerView? by bindOptionalView(R.id.rvList)
+  private var mGoogleApiClient: GoogleApiClient? = null
 
+  internal val rvList: RecyclerView? by bindOptionalView(R.id.rvList)
   internal var tvLastItem: TextView? = null
   private var itemAdapter: FrescoAdapter? = null
   private val listItem2 = ArrayList<Item>()
@@ -86,6 +92,15 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
     super.onStart()
     if (mAuth != null)
       mAuth!!.addAuthStateListener(mAuthListener)
+  }
+
+  override fun onConnectionSuspended(p0: Int) {
+  }
+
+  override fun onConnected(p0: Bundle?) {
+  }
+
+  override fun onConnectionFailed(p0: ConnectionResult) {
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -297,10 +312,40 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
   }
 
   private fun initializeGoogle() {
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(R.string.default_web_client_id.toString())
+            .requestEmail()
+            .build()
+
+    mGoogleApiClient = GoogleApiClient.Builder(this)
+            .enableAutoManage(this, this)
+            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+            .build()
+
     mAuth = FirebaseAuth.getInstance()
     mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
       if (firebaseAuth.currentUser == null && !isLoggedInFacebook) {
-        goToLoginActivity("You are logged out Google successfully!")
+
+        val aBuilder = AlertDialog.Builder(this)
+        aBuilder.setMessage("Do you also to revoke all access from OWLY?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", object: DialogInterface.OnClickListener {
+                  override fun onClick(dialog:DialogInterface, which:Int) {
+                    Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback {
+                      goToLoginActivity("You are logged out and revoked Google Sign in!")
+                    }
+                  }
+                })
+                .setNegativeButton("No", object: DialogInterface.OnClickListener {
+                  override fun onClick(dialog:DialogInterface, which:Int) {
+                    Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback {
+                      goToLoginActivity("You are logged out Google successfully!")
+                    }
+                  }
+                })
+        val alert = aBuilder.create()
+        alert.setTitle("Logout Alert")
+        alert.show()
       }
     }
   }

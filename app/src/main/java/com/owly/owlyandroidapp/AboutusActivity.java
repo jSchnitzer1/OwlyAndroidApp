@@ -1,10 +1,12 @@
 package com.owly.owlyandroidapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -97,12 +99,12 @@ public class AboutusActivity extends AppCompatActivity {
                 if (++counter > 2) {
                     //credits.setTextColor(Color.parseColor("#283886"));
                     SpannableString sString = new SpannableString(creditsText);
-                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#FCB37D")), 0, 25, 0);
-                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#88B1FF")), 40, 54, 0);
-                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#88B1FF")), 74, 85, 0);
-                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#88B1FF")), 109, 123, 0);
-                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#FCB37D")), 127, 134, 0);
-                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#88B1FF")), 134, creditsText.length(), 0);
+                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#FEA25E")), 0, 25, 0);
+                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#669AFE")), 40, 54, 0);
+                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#669AFE")), 74, 85, 0);
+                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#669AFE")), 109, 123, 0);
+                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#FEA25E")), 127, 134, 0);
+                    sString.setSpan(new ForegroundColorSpan(Color.parseColor("#669AFE")), 134, creditsText.length(), 0);
                     sString.setSpan(new RelativeSizeSpan(0.9f), 134, creditsText.length(), 0);
                     credits.setText(sString);
                     return;

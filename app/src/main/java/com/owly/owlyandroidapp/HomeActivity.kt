@@ -41,35 +41,13 @@ import kotterknife.bindView
 
 import java.util.ArrayList
 
-class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, MaterialSearchBar.OnSearchActionListener  {
-  override fun onSearchStateChanged(enabled: Boolean) {
-    val s = if(enabled) "enabled" else "disabled";
-    Toast.makeText(this, "Search " + s, Toast.LENGTH_SHORT).show();
-  }
+class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, MaterialSearchBar.OnSearchActionListener {
 
-  override fun onSearchConfirmed(text: CharSequence?) {
-    WalmartApiService.create().search(text.toString())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.io())
-        .subscribe ({
-          result ->
-          //Log.d("Result", "There are ${result.items.size} Java developers in Lagos")
-          listItem2.clear()
-          listItem2.addAll(result.items.subList(0,9))
-          itemAdapter!!.setListItem(listItem2)
-
-          searchBar!!.disableSearch()
-
-        }, { error ->
-          error.printStackTrace()
-        })
-
-  }
 
 
   private var mDrawerLayout: DrawerLayout? = null
   private var mToggle: ActionBarDrawerToggle? = null
-  private val home_nav_view:NavigationView? by bindOptionalView(R.id.home_nav_view)
+  private val home_nav_view: NavigationView? by bindOptionalView(R.id.home_nav_view)
 
   internal var accessToken: AccessToken? = null
 
@@ -122,9 +100,9 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
     searchBar!!.setOnSearchActionListener(this)
     //restore last queries from disk
     //Inflate menu and setup OnMenuItemClickListener
-    searchBar!!.inflateMenu(R.menu.home_menu);
-    //searchBar!!.getMenu().setOnMenuItemClickListener(this);
+    searchBar!!.inflateMenu(R.menu.home_menu)
 
+    //searchBar!!.getMenu().setOnMenuItemClickListener(this);
 
 
     val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -135,19 +113,12 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
       override fun getSpanSize(position: Int): Int {
         val index = position % 5
         when (index) {
-          0 -> return 2
-          1 -> return 2
-          2 -> return 2
-          3 -> return 3
-          4 -> return 3
+          in 0..2 -> return 2
+          3,4 -> return 3
         }
         return -1
       }
     }
-
-
-
-
 
     rvList!!.layoutManager = staggeredGridLayoutManager
     itemAdapter = FrescoAdapter(this, {
@@ -156,10 +127,9 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
     WalmartApiService.create().trends()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
-        .subscribe ({
-          result ->
+        .subscribe({ result ->
           //Log.d("Result", "There are ${result.items.size} Java developers in Lagos")
-          listItem2.addAll(result.items.subList(0,9))
+          listItem2.addAll(result.items.subList(0, 9))
           itemAdapter!!.setListItem(listItem2)
           rvList!!.adapter = itemAdapter
           rvList!!.itemAnimator = null
@@ -179,20 +149,18 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
           WalmartApiService.create().trends()
               .observeOn(AndroidSchedulers.mainThread())
               .subscribeOn(Schedulers.io())
-              .subscribe ({
-                result ->
-                localList.addAll(result.items.subList(10,19))
+              .subscribe({ result ->
+                localList.addAll(result.items.subList(10, 19))
                 listItem2.addAll(localList)
                 itemAdapter!!.setListItem(listItem2)
               }, { error ->
                 error.printStackTrace()
               })
-        }else if (page == 2 && notInSearch) {
+        } else if (page == 2 && notInSearch) {
           WalmartApiService.create().search("SmartPhone")
               .observeOn(AndroidSchedulers.mainThread())
               .subscribeOn(Schedulers.io())
-              .subscribe ({
-                result ->
+              .subscribe({ result ->
                 localList.addAll(result.items)
                 listItem2.addAll(localList)
                 itemAdapter!!.setListItem(listItem2)
@@ -214,23 +182,40 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
   }
 
 
-
   private fun initializeGUI() {
-
-
-
 
     mDrawerLayout = findViewById<View>(R.id.drawerLayout) as DrawerLayout
 
     home_nav_view!!.setNavigationItemSelectedListener(this)
   }
 
-  private fun goToProductDetailWith(item:Item){
+  override fun onSearchStateChanged(enabled: Boolean) {
+    val s = if (enabled) "enabled" else "disabled";
+    Toast.makeText(this, "Search " + s, Toast.LENGTH_SHORT).show();
+  }
+
+  override fun onSearchConfirmed(text: CharSequence?) {
+    WalmartApiService.create().search(text.toString())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .subscribe({ result ->
+          listItem2.clear()
+          listItem2.addAll(result.items.subList(0, 9))
+          itemAdapter!!.setListItem(listItem2)
+          searchBar!!.disableSearch()
+
+        }, { error ->
+          error.printStackTrace()
+        })
+
+  }
+
+  private fun goToProductDetailWith(item: Item) {
     val i = Intent(this@HomeActivity, ProductDetailActivity::class.java)
     i.putExtra("name", item.name)
     i.putExtra("price", item.salePrice.toString() + " $")
     i.putExtra("description", item.shortDescription)
-    i.putExtra("imageURL",item.mediumImage)
+    i.putExtra("imageURL", item.mediumImage)
     startActivity(i)
   }
 
@@ -242,7 +227,6 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
       MaterialSearchBar.BUTTON_BACK -> searchBar!!.disableSearch()
     }
   }
-
 
 
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -265,7 +249,6 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
     mDrawerLayout!!.closeDrawer(GravityCompat.START)
     return true
   }
-
 
 
   private fun showLoginStatus() {
@@ -307,7 +290,7 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    if(mToggle!!.onOptionsItemSelected(item)) {
+    if (mToggle!!.onOptionsItemSelected(item)) {
       return true
     }
     when (item.itemId) {
@@ -331,7 +314,6 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
     i.putExtra("txtStatusMsg", msg)
     startActivity(i)
   }
-
 
 
   companion object CREATOR : Parcelable.Creator<HomeActivity> {

@@ -17,8 +17,8 @@
         <com.mancj.materialsearchbar.MaterialSearchBar
             style="@style/MaterialSearchBarDark"
             app:mt_speechMode="true"
-            app:mt_hint="Search..."
-            app:mt_placeholder="Search"
+            app:mt_hint="Search Product"
+            app:mt_placeholder="Owly"
             app:mt_maxSuggestionsCount="10"
             app:mt_navIconEnabled="true"
             android:layout_width="match_parent"
@@ -29,6 +29,10 @@
             android:minHeight="?attr/actionBarSize"
             app:theme="@style/ThemeOverlay.AppCompat.Dark"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:mt_textColor="@color/white"
+            app:mt_highlightedTextColor="@color/white"
+            app:mt_placeholderColor="@color/white"
+            app:mt_hintColor="@color/white"
 />
 
 

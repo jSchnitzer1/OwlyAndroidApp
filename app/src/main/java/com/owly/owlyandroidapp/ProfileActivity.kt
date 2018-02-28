@@ -60,6 +60,7 @@ class ProfileActivity : Activity, OnMapReadyCallback {
   private val listItem2 = ArrayList<Item>()
 
   val error: TextView? by bindOptionalView(R.id.errorProfile)
+  val spin_kit: com.github.ybq.android.spinkit.SpinKitView? by bindOptionalView(R.id.spin_kit_profile)
 
   private val isLoggedInFacebook: Boolean
     get() = accessToken != null
@@ -109,12 +110,14 @@ class ProfileActivity : Activity, OnMapReadyCallback {
         .subscribe({ result ->
           //Log.d("Result", "There are ${result.items.size} Java developers in Lagos")
           error!!.visibility = View.GONE
+          spin_kit!!.visibility = View.GONE
           listItem2.addAll(result.items.subList(0, 9))
           itemAdapter!!.setListItem(listItem2)
           rvList!!.adapter = itemAdapter
           rvList!!.itemAnimator = null
 
         }, { err ->
+          spin_kit!!.visibility = View.GONE
           error!!.visibility = View.VISIBLE
           err.printStackTrace()
         })

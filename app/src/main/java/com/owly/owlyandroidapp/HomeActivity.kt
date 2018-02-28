@@ -26,6 +26,7 @@ import com.facebook.AccessToken
 import com.facebook.Profile
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.login.LoginManager
+import com.github.ybq.android.spinkit.style.DoubleBounce
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
@@ -64,6 +65,7 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
   val searchBar: MaterialSearchBar? by bindOptionalView(R.id.searchBar)
 
   val error: TextView? by bindOptionalView(R.id.error)
+  val spin_kit: com.github.ybq.android.spinkit.SpinKitView? by bindOptionalView(R.id.spin_kit)
 
 
   private var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener? = null
@@ -131,13 +133,16 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
         .subscribe({ result ->
           //Log.d("Result", "There are ${result.items.size} Java developers in Lagos")
           error!!.visibility = View.GONE
+          spin_kit!!.visibility = View.GONE
           listItem2.addAll(result.items.subList(0, 9))
           itemAdapter!!.setListItem(listItem2)
           rvList!!.adapter = itemAdapter
           rvList!!.itemAnimator = null
 
         }, { err ->
+          spin_kit!!.visibility = View.GONE
           error!!.visibility = View.VISIBLE
+
           err.printStackTrace()
         })
 
@@ -198,17 +203,20 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
   }
 
   override fun onSearchConfirmed(text: CharSequence?) {
+    spin_kit!!.visibility = View.VISIBLE
     WalmartApiService.create().search(text.toString())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
         .subscribe({ result ->
           error!!.visibility = View.GONE
+          spin_kit!!.visibility = View.GONE
           listItem2.clear()
           listItem2.addAll(result.items.subList(0, 9))
           itemAdapter!!.setListItem(listItem2)
           searchBar!!.disableSearch()
 
         }, { err ->
+          spin_kit!!.visibility = View.GONE
           error!!.visibility = View.VISIBLE
           err.printStackTrace()
         })

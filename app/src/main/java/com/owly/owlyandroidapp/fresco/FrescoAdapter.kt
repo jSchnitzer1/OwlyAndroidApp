@@ -1,18 +1,24 @@
 package com.owly.owlyandroidapp.fresco
 
 import android.app.Activity
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
+import android.system.Os.bind
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.owly.owlyandroidapp.LoginActivity
 import com.owly.owlyandroidapp.R
 import com.owly.owlyandroidapp.bean.Item
 import kotterknife.bindOptionalView
+import java.io.Serializable
 
 
-class FrescoAdapter(activity: Activity) : RecyclerView.Adapter<FrescoAdapter.ViewHolder>() {
+class FrescoAdapter(activity: Activity,private val callback: (Item) -> Unit) : RecyclerView.Adapter<FrescoAdapter.ViewHolder>(){
+
+
   private val layoutInflater: LayoutInflater = LayoutInflater.from(activity)
   private var listItem2: List<Item>? = null
 
@@ -30,9 +36,17 @@ class FrescoAdapter(activity: Activity) : RecyclerView.Adapter<FrescoAdapter.Vie
     viewHolder.ivImageView?.setImageURI(listItem2!![i].thumbnailImage)
     viewHolder.txtViewName.text = listItem2!![i].name
     viewHolder.txtViewPrice.text = listItem2!![i].salePrice.toString() + " €"
-    val name = listItem2!![i].name
-    viewHolder.itemView?.setOnClickListener{Log.d("Touched",name)}
+    val item = listItem2!![i]
+
+    viewHolder.itemView?.setOnClickListener { callback(item)}
+
   }
+
+  lateinit var clickListener :OnItemClickListener
+  interface OnItemClickListener {
+    fun onItemClick(position: Int, view: View, vh: RecyclerView.ViewHolder)
+  }
+
 
 
   override fun getItemCount(): Int {

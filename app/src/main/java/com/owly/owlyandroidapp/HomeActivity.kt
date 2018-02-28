@@ -57,6 +57,7 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
           listItem2.clear()
           listItem2.addAll(result.items.subList(0,9))
           itemAdapter!!.setListItem(listItem2)
+
           searchBar!!.disableSearch()
 
         }, { error ->
@@ -149,7 +150,9 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
 
 
     rvList!!.layoutManager = staggeredGridLayoutManager
-    itemAdapter = FrescoAdapter(this)
+    itemAdapter = FrescoAdapter(this, {
+      goToProductDetailWith(it)
+    })
     WalmartApiService.create().trends()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
@@ -222,6 +225,15 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
     home_nav_view!!.setNavigationItemSelectedListener(this)
   }
 
+  private fun goToProductDetailWith(item:Item){
+    val i = Intent(this@HomeActivity, ProductDetailActivity::class.java)
+    i.putExtra("name", item.name)
+    i.putExtra("price", item.salePrice.toString() + " $")
+    i.putExtra("description", item.shortDescription)
+    i.putExtra("imageURL",item.mediumImage)
+    startActivity(i)
+  }
+
   override fun onButtonClicked(buttonCode: Int) {
     when (buttonCode) {
       MaterialSearchBar.BUTTON_NAVIGATION -> mDrawerLayout!!.openDrawer(Gravity.LEFT)
@@ -253,6 +265,8 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
     mDrawerLayout!!.closeDrawer(GravityCompat.START)
     return true
   }
+
+
 
   private fun showLoginStatus() {
     if (isLoggedInFacebook) {

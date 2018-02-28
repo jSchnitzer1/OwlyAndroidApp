@@ -9,14 +9,14 @@
     <RelativeLayout
         android:id="@+id/main_controls"
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="300dp">
 
 
 
         <RelativeLayout
             android:id="@+id/google_map"
             android:layout_width="match_parent"
-            android:layout_height="125dp">
+            android:layout_height="155dp">
 
             <fragment
                 android:id="@+id/map"
@@ -32,7 +32,6 @@
             android:layout_height="70dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-
             android:src="@drawable/image2"
             app:civ_border_width="5dp"
             app:civ_border_color="#ffffff"/>
@@ -176,6 +175,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginLeft="124dp"
                     android:text="Buys" />
@@ -186,26 +186,51 @@
 
 
 
+
     </RelativeLayout>
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/main_controls"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spin_kit_profile"
+            style="@style/SpinKitView.Large.Circle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorAccent"
+            android:gravity="center_vertical|center" />
 
         <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="55dp"
-            android:text="Your listing is here somewhere :)" />
+            android:id="@+id/errorProfile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical|center"
+            android:text="Error in loading data, please try again!"
+            android:textSize="17dp"
+            android:visibility="gone"
+            android:textColor="@color/colorError"/>
 
-    </RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvListProfile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

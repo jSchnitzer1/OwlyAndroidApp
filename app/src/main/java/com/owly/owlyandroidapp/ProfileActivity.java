@@ -1,6 +1,8 @@
 package com.owly.owlyandroidapp;
 
 import android.app.Activity;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -14,13 +16,28 @@ import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class ProfileActivity extends Activity {
+public class ProfileActivity extends Activity implements OnMapReadyCallback {
 
     AccessToken accessToken;
     FirebaseAuth mAuth;
@@ -28,11 +45,27 @@ public class ProfileActivity extends Activity {
     TextView username;
     CircleImageView imgUser;
 
+    GoogleMap map;
+    Marker marker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        initializeGUI();
+        initializeFacebook();
+        initializeGoogle();
+        showLoginInfo();
+        initializeGoogleMaps();
+    }
+
+    private void initializeGoogleMaps() {
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+    private void initializeGUI() {
         ImageView str1 = (ImageView)findViewById(R.id.str1);
         str1.setBackgroundResource(R.drawable.star);
         ImageView str2 = (ImageView)findViewById(R.id.str2);
@@ -46,10 +79,6 @@ public class ProfileActivity extends Activity {
 
         imgUser = (CircleImageView) findViewById(R.id.imgUser);
         username = (TextView) findViewById(R.id.username);
-
-        initializeFacebook();
-        initializeGoogle();
-        showLoginInfo();
     }
 
     private void showLoginInfo() {
@@ -101,4 +130,48 @@ public class ProfileActivity extends Activity {
         return mAuth != null;
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        //goToLocation(59.329073, 18.068043, 13);
+        geoLocate();
+    }
+
+    private void goToLocation(double lat, double lng, int zoom) {
+        LatLng ll = new LatLng(lat, lng);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
+        map.moveCamera(update);
+    }
+
+    private void geoLocate() {
+        String location = "HM Stockholm";
+        Geocoder gc = new Geocoder(this);
+        try {
+            List<Address> list = gc.getFromLocationName(location, 1);
+            if(list.size() > 0) {
+                Address address = list.get(0);
+                String locality = address.getLocality();
+                double lat = address.getLatitude();
+                double lng = address.getLongitude();
+
+                setMarker(locality, lat, lng, location);
+            }
+
+        } catch (IOException e) {
+        }
+    }
+
+    private void setMarker(String locality, double lat, double lng, String location) {
+        if(marker != null)
+            marker.remove();
+
+        MarkerOptions options = new MarkerOptions()
+                .title(locality)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.hm_48))
+                .position(new LatLng(lat, lng))
+                .snippet(location);
+
+        marker = map.addMarker(options);
+        goToLocation(lat, lng, 17);
+    }
 }

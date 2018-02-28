@@ -293,15 +293,15 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
       val profile = Profile.getCurrentProfile()
       if (profile != null) {
         val firstName = profile.firstName
-        //Snackbar.make(findViewById<View>(R.id.search), "Hi $firstName\nYou are logged in using Facebook account", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(findViewById<View>(R.id.searchBar), "Hi $firstName\nYou are logged in using Facebook account", Snackbar.LENGTH_SHORT).show()
       } else {
-        //Snackbar.make(findViewById<View>(R.id.search), "Hi\nYou are logged in using Facebook account", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(findViewById<View>(R.id.searchBar), "Hi\nYou are logged in using Facebook account", Snackbar.LENGTH_SHORT).show()
       }
     } else if (isLoggedInGoogle) {
       val acct = GoogleSignIn.getLastSignedInAccount(this)
       if (acct != null) {
         val personGivenName = acct.givenName
-        //Snackbar.make(findViewById<View>(R.id.search), "Hi $personGivenName\nYou are logged in using Google account", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(findViewById<View>(R.id.searchBar), "Hi $personGivenName\nYou are logged in using Google account", Snackbar.LENGTH_SHORT).show()
       }
     }
 

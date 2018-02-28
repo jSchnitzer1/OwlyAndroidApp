@@ -9,14 +9,14 @@
     <RelativeLayout
         android:id="@+id/main_controls"
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="300dp">
 
 
 
         <RelativeLayout
             android:id="@+id/google_map"
             android:layout_width="match_parent"
-            android:layout_height="125dp">
+            android:layout_height="155dp">
 
             <fragment
                 android:id="@+id/map"
@@ -32,7 +32,6 @@
             android:layout_height="70dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-
             android:src="@drawable/image2"
             app:civ_border_width="5dp"
             app:civ_border_color="#ffffff"/>

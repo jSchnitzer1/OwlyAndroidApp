@@ -1,5 +1,6 @@
 package com.owly.owlyandroidapp
 
+import android.graphics.Color
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -36,6 +37,7 @@ class ProductDetailActivity : AppCompatActivity() {
       imgView.setImageURI(url)
 
       descriptionLbl.setMovementMethod(ScrollingMovementMethod())
+      priceLbl.setTextColor(Color.parseColor("#ff7e00"));
 
     }
   }

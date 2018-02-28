@@ -8,6 +8,9 @@ import android.widget.TextView
 import com.owly.owlyandroidapp.fresco.WrapContentDrawerView
 import kotterknife.bindView
 import org.w3c.dom.Text
+import android.text.method.ScrollingMovementMethod
+
+
 
 class ProductDetailActivity : AppCompatActivity() {
 
@@ -32,7 +35,7 @@ class ProductDetailActivity : AppCompatActivity() {
       priceLbl.text = price
       imgView.setImageURI(url)
 
-
+      descriptionLbl.setMovementMethod(ScrollingMovementMethod())
 
     }
   }

@@ -59,6 +59,8 @@ class ProfileActivity : Activity, OnMapReadyCallback {
   private var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener? = null
   private val listItem2 = ArrayList<Item>()
 
+  val error: TextView? by bindOptionalView(R.id.errorProfile)
+
   private val isLoggedInFacebook: Boolean
     get() = accessToken != null
 
@@ -106,13 +108,15 @@ class ProfileActivity : Activity, OnMapReadyCallback {
         .subscribeOn(Schedulers.io())
         .subscribe({ result ->
           //Log.d("Result", "There are ${result.items.size} Java developers in Lagos")
+          error!!.visibility = View.GONE
           listItem2.addAll(result.items.subList(0, 9))
           itemAdapter!!.setListItem(listItem2)
           rvList!!.adapter = itemAdapter
           rvList!!.itemAnimator = null
 
-        }, { error ->
-          error.printStackTrace()
+        }, { err ->
+          error!!.visibility = View.VISIBLE
+          err.printStackTrace()
         })
     endlessRecyclerViewScrollListener = object : EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
       override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {}

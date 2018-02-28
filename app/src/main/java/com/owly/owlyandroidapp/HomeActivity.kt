@@ -41,8 +41,7 @@ import kotterknife.bindView
 
 import java.util.ArrayList
 
-class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, MaterialSearchBar.OnSearchActionListener {
-
+class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, MaterialSearchBar.OnSearchActionListener, PopupMenu.OnMenuItemClickListener {
 
 
   private var mDrawerLayout: DrawerLayout? = null
@@ -63,6 +62,8 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
   var lastSearches: List<String>? = null
 
   val searchBar: MaterialSearchBar? by bindOptionalView(R.id.searchBar)
+
+  val error: TextView? by bindOptionalView(R.id.error)
 
 
   private var endlessRecyclerViewScrollListener: EndlessRecyclerViewScrollListener? = null
@@ -100,9 +101,9 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
     searchBar!!.setOnSearchActionListener(this)
     //restore last queries from disk
     //Inflate menu and setup OnMenuItemClickListener
-    searchBar!!.inflateMenu(R.menu.home_menu)
+    searchBar!!.inflateMenu(R.menu.bar_menu)
 
-    //searchBar!!.getMenu().setOnMenuItemClickListener(this);
+    searchBar!!.getMenu().setOnMenuItemClickListener(this);
 
 
     val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -129,13 +130,15 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
         .subscribeOn(Schedulers.io())
         .subscribe({ result ->
           //Log.d("Result", "There are ${result.items.size} Java developers in Lagos")
+          error!!.visibility = View.GONE
           listItem2.addAll(result.items.subList(0, 9))
           itemAdapter!!.setListItem(listItem2)
           rvList!!.adapter = itemAdapter
           rvList!!.itemAnimator = null
 
-        }, { error ->
-          error.printStackTrace()
+        }, { err ->
+          error!!.visibility = View.VISIBLE
+          err.printStackTrace()
         })
 
 
@@ -199,13 +202,15 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
         .subscribe({ result ->
+          error!!.visibility = View.GONE
           listItem2.clear()
           listItem2.addAll(result.items.subList(0, 9))
           itemAdapter!!.setListItem(listItem2)
           searchBar!!.disableSearch()
 
-        }, { error ->
-          error.printStackTrace()
+        }, { err ->
+          error!!.visibility = View.VISIBLE
+          err.printStackTrace()
         })
 
   }
@@ -213,7 +218,7 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
   private fun goToProductDetailWith(item: Item) {
     val i = Intent(this@HomeActivity, ProductDetailActivity::class.java)
     i.putExtra("name", item.name)
-    i.putExtra("price", item.salePrice.toString() + " $")
+    i.putExtra("price", item.salePrice.toString() + " €")
     i.putExtra("description", item.shortDescription)
     i.putExtra("imageURL", item.mediumImage)
     startActivity(i)
@@ -228,7 +233,16 @@ class HomeActivity() : AppCompatActivity(), OnNavigationItemSelectedListener, Ma
     }
   }
 
+  override fun onMenuItemClick(item: MenuItem?): Boolean {
+    when (item!!.itemId) {
+      R.id.logout_item -> {
+        logout()
+      }
+    }
 
+    mDrawerLayout!!.closeDrawer(GravityCompat.START)
+    return true
+  }
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
       R.id.profile_item -> {
